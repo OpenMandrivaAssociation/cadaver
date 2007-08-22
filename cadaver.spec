@@ -1,16 +1,12 @@
-%define	name	cadaver
-%define version 0.22.5
-%define release %mkrel 1
-
 Summary:	Command-line WebDAV client
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Name:		cadaver
+Version:	0.23.0
+Release:	%mkrel 1
 License:	GPL
 Group:		Networking/File transfer
-Source0:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.bz2
-Source1:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz.asc
 URL:		http://www.webdav.org/cadaver/
+Source0:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz
+Source1:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz.asc
 BuildRequires:	openssl-devel ncurses-devel readline-devel expat-devel
 BuildRequires:	libxml2-devel zlib-devel libneon0.26-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -33,13 +29,14 @@ creation and deletion, and locking operations.
 %make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%{makeinstall}
+rm -rf %{buildroot}
+
+%makeinstall_std
 
 %find_lang %{name}
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-, root, root)
@@ -47,5 +44,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 %defattr(644,root,root,755)
 %doc NEWS TODO FAQ COPYING README ChangeLog
-
-
