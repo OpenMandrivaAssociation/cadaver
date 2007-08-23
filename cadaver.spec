@@ -7,8 +7,13 @@ Group:		Networking/File transfer
 URL:		http://www.webdav.org/cadaver/
 Source0:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz
 Source1:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz.asc
-BuildRequires:	openssl-devel ncurses-devel readline-devel expat-devel
-BuildRequires:	libxml2-devel zlib-devel libneon0.26-devel
+BuildRequires:	expat-devel
+BuildRequires:	libneon0.27-devel
+BuildRequires:	libxml2-devel
+BuildRequires:	ncurses-devel
+BuildRequires:	openssl-devel
+BuildRequires:	readline-devel
+BuildRequires:	zlib-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
