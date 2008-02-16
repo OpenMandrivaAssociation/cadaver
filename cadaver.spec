@@ -1,8 +1,8 @@
 Summary:	Command-line WebDAV client
 Name:		cadaver
-Version:	0.23.0
+Version:	0.23.2
 Release:	%mkrel 1
-License:	GPL
+License:	GPLv2+
 Group:		Networking/File transfer
 URL:		http://www.webdav.org/cadaver/
 Source0:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz
@@ -26,7 +26,7 @@ creation and deletion, and locking operations.
 
 %build
 
-%configure2_5x \
+%configure \
     --with-neon=%{_prefix} \
     --with-ssl \
     --with-libxml2
@@ -48,4 +48,4 @@ rm -rf %{buildroot}
 %{_bindir}/*
 %{_mandir}/man1/*
 %defattr(644,root,root,755)
-%doc NEWS TODO FAQ COPYING README ChangeLog
+%doc NEWS TODO FAQ README ChangeLog
