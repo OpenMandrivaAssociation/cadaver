@@ -1,7 +1,7 @@
 Summary:	Command-line WebDAV client
 Name:		cadaver
-Version:	0.23.2
-Release:	%mkrel 5
+Version:	0.23.3
+Release:	%mkrel 1
 License:	GPLv2+
 Group:		Networking/File transfer
 URL:		http://www.webdav.org/cadaver/
