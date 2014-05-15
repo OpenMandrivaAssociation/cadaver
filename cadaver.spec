@@ -32,7 +32,9 @@ creation and deletion, and locking operations.
 %configure	--with-neon=%{_prefix} \
 		--with-ssl \
     		--with-libxml2 \
-		--with-ca-bundle=%{_sysconfdir}/ssl/certs/ca-bundle.crt
+		--with-ca-bundle=%{_sysconfdir}/ssl/certs/ca-bundle.crt \
+		--enable-threads=posix
+		
 
 %make
 
