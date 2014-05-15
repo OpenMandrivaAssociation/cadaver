@@ -33,7 +33,8 @@ creation and deletion, and locking operations.
 		--with-ssl \
     		--with-libxml2 \
 		--with-ca-bundle=%{_sysconfdir}/ssl/certs/ca-bundle.crt \
-		--enable-threads=posix
+		--enable-threads=posix \
+		--enable-threadsafe-ssl=posix
 		
 
 %make
