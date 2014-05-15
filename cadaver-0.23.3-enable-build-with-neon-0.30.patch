@@ -1,0 +1,11 @@
+--- cadaver-0.23.3/configure.ac~	2014-05-16 00:34:36.305057192 +0200
++++ cadaver-0.23.3/configure.ac	2014-05-16 00:34:38.899174996 +0200
+@@ -33,7 +33,7 @@ if test "$enable_debug" = "yes"; then
+ 		      AC_HELP_STRING([--disable-netrc], [enable .netrc support]),,
+ 		      enable_netrc=yes)
+ 
+-	NE_REQUIRE_VERSIONS([0], [27 28 29])
++	NE_REQUIRE_VERSIONS([0], [27 28 29 30])
+ 
+ dnl Don't enable zlib or ACL support in neon
+ NEON_WITHOUT_ZLIB
