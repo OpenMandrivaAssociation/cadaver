@@ -25,6 +25,7 @@ creation and deletion, and locking operations.
 %prep
 %setup -q
 %patch0 -p1 -b .neon0.30~
+./autogen.sh
 
 %build
 
