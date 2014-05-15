@@ -29,10 +29,10 @@ creation and deletion, and locking operations.
 
 %build
 
-%configure \
-    --with-neon=%{_prefix} \
-    --with-ssl \
-    --with-libxml2
+%configure	--with-neon=%{_prefix} \
+		--with-ssl \
+    		--with-libxml2 \
+		--with-ca-bundle=%{_sysconfdir}/ssl/certs/ca-bundle.crt
 
 %make
 
