@@ -1,0 +1,183 @@
+From 416a3280119edd41f5229e04cce3d990bc1381cb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Per=20=C3=98yvind=20Karlsen=20=28proyvind=29?=
+ <proyvind@moondrake.org>
+Date: Fri, 16 May 2014 07:34:27 +0200
+Subject: [PATCH] update and fix autofoo mess i#	modified:   lib/intl/gettext.c
+
+---
+ Makefile.in    |  2 +-
+ configure.ac   | 44 +++++++++++++++++++++-----------------------
+ m4/inttypes.m4 |  6 +++---
+ m4/prereq.m4   |  6 +++---
+ 4 files changed, 28 insertions(+), 30 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index bcefd58..bbe9a89 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -37,7 +37,7 @@ LDFLAGS = @LDFLAGS@
+ LIBS = @LIBS@ @NEON_LIBS@
+ 
+ TARGET = $(PACKAGE)
+-SUBDIRS = lib/neon lib/intl
++SUBDIRS = lib/neon
+ OBJECTS = src/cadaver.o src/common.o src/commands.o src/ls.o	\
+ 	 src/cmdline.o src/options.o src/utils.o src/edit.o \
+ 	src/version.o src/search.o 
+diff --git a/configure.ac b/configure.ac
+index a26f60e..44ba92d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,26 +1,32 @@
+ dnl configure script
+ 
+-AC_PREREQ(2.53)
+-AC_INIT(cadaver, 0.23.3, cadaver@webdav.org)
++AC_PREREQ([2.69])
++AC_INIT([cadaver],[0.23.3],[cadaver@webdav.org])
+ 
++AC_CONFIG_AUX_DIR(.)
+ AC_CONFIG_SRCDIR(src/cadaver.c)
+ AC_CONFIG_HEADER(config.h)
++# XXX: autopoint won't work with AC_CONFIG_MACRO_DIRS
++AC_CONFIG_MACRO_DIR([m4])
++AC_CONFIG_MACRO_DIRS([m4 m4/neon])
++
+ 
+ AC_DEFINE([_GNU_SOURCE], 1, [Define to enable GNU extensions])
+ 
+ NEON_WITH_LIBS
+ 
+-AC_ISC_POSIX
++AC_SEARCH_LIBS([strerror],[cposix])
+ AC_PROG_CC
++AC_USE_SYSTEM_EXTENSIONS
+ AC_PROG_INSTALL
+-AC_LANG_C
+-AC_SET_MAKE
+-AC_PROG_RANLIB
++AC_LANG([C])
++AC_PROG_MAKE_SET
++LT_INIT
+ 
+ AC_HEADER_STDC
+ 
+ AC_ARG_ENABLE(debugging,
+-AC_HELP_STRING([--disable-debugging],[disable runtime debugging messages]),,
++AS_HELP_STRING([--disable-debugging],[disable runtime debugging messages]),,
+ enable_debug=yes)
+ 
+ if test "$enable_debug" = "yes"; then
+@@ -30,7 +36,7 @@ fi
+ CHECK_READLINE()
+ 
+ AC_ARG_ENABLE(netrc,
+-AC_HELP_STRING([--disable-netrc], [enable .netrc support]),,
++AS_HELP_STRING([--disable-netrc],[enable .netrc support]),,
+ enable_netrc=yes)
+ 
+ NE_REQUIRE_VERSIONS([0], [27 28 29 30])
+@@ -42,10 +48,10 @@ NEON_WITHOUT_ACL
+ AC_PROVIDE([NE_SNPRINTF])
+ 
+ dnl Build neon. We support a VPATH build.
+-NEON_VPATH_BUNDLED(['$(top_srcdir)/lib/neon'], [lib/neon], [
++NEON_VPATH_BUNDLED([lib/neon], [lib/neon], [
+ 	# We are using a bundled build, do the necessary stuff...
+ 	# we have a bundled expat, and we don't need zlib support
+-        NEON_XML_PARSER([\$(top_srcdir)/lib/expat], [\$(top_builddir)/lib/expat])
++        NEON_XML_PARSER([lib/expat], [lib/expat])
+ 	NEON_NORMAL_BUILD
+ ], [
+ 	# Not using a bundled build... do stuff.
+@@ -93,26 +99,18 @@ AC_CHECK_HEADERS(sys/time.h pwd.h stdarg.h vmsdir.h memory.h alloca.h ncurses.h
+ 
+ jm_FUNC_STRFTIME()
+ 
+-AM_GNU_GETTEXT([no-libtool],,[\$(top_builddir)/lib/intl])
++gl_THREADLIB_EARLY
++AM_GNU_GETTEXT([external])
++AM_GNU_GETTEXT_VERSION([0.18.3])
+ 
+-if test "$USE_NLS" = "yes"; then
+-    if test "$USE_INCLUDED_LIBINTL" = "yes"; then
+-	nls_msg="Built using included libintl"
+-        CPPFLAGS="$CPPFLAGS -I\$(top_builddir)/lib/intl"
+-    else
+-	nls_msg="Built using native support"
+-    fi
+-    LIBS="$LIBS $LIBINTL"
+-else
+-    nls_msg="Not built"
+-fi
++AM_PROG_MKDIR_P
+ 
+ NEON_WARNINGS
+ 
+ # Pick up config.h etc; and before any other paths.
+ CPPFLAGS="-I\$(top_builddir) -I\$(top_srcdir)/lib $CPPFLAGS"
+ 
+-AC_CONFIG_FILES([Makefile lib/neon/Makefile lib/intl/Makefile \
++AC_CONFIG_FILES([Makefile lib/neon/Makefile \
+                  po/Makefile.in])
+ 
+ AC_OUTPUT
+diff --git a/m4/inttypes.m4 b/m4/inttypes.m4
+index 9571814..684b83a 100644
+--- a/m4/inttypes.m4
++++ b/m4/inttypes.m4
+@@ -8,7 +8,7 @@ AC_PREREQ(2.52)
+ 
+ AC_DEFUN([jm_AC_TYPE_INTMAX_T],
+ [
+-  AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
++  AC_REQUIRE([AC_TYPE_LONG_LONG_INT])
+   AC_CHECK_TYPE(intmax_t, ,
+     [test $ac_cv_type_long_long = yes \
+        && ac_type='long long' \
+@@ -20,9 +20,9 @@ AC_DEFUN([jm_AC_TYPE_INTMAX_T],
+ # Define uintmax_t to unsigned long or unsigned long long
+ # if <inttypes.h> doesn't define.
+ 
+-AC_DEFUN([jm_AC_TYPE_UINTMAX_T],
++AC_DEFUN([AC_TYPE_UINTMAX_T],
+ [
+-  AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
++  AC_REQUIRE([AC_TYPE_UNSIGNED_LONG_LONG_INT])
+   AC_CHECK_TYPE(uintmax_t, ,
+     [test $ac_cv_type_unsigned_long_long = yes \
+        && ac_type='unsigned long long' \
+diff --git a/m4/prereq.m4 b/m4/prereq.m4
+index 0c3ff4e..94e97c4 100644
+--- a/m4/prereq.m4
++++ b/m4/prereq.m4
+@@ -90,7 +90,7 @@ AC_DEFUN([jm_PREREQ_HUMAN],
+ [
+   AC_CHECK_HEADERS(limits.h stdlib.h string.h)
+   AC_CHECK_DECLS([getenv])
+-  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
++  AC_REQUIRE([AC_TYPE_UINTMAX_T])
+ ])
+ 
+ AC_DEFUN([jm_PREREQ_MEMCHR],
+@@ -171,7 +171,7 @@ AC_DEFUN([jm_PREREQ_STAT],
+   AC_CHECK_HEADERS(sys/sysmacros.h sys/statvfs.h sys/vfs.h inttypes.h)
+   AC_CHECK_HEADERS(sys/param.h sys/mount.h)
+   AC_CHECK_FUNCS(statvfs)
+-  jm_AC_TYPE_LONG_LONG
++  AC_TYPE_LONG_LONG_INT
+ 
+   statxfs_includes="\
+ $ac_includes_default
+@@ -221,7 +221,7 @@ AC_DEFUN([jm_PREREQ_TEMPNAME],
+   AC_CHECK_HEADERS(fcntl.h sys/time.h stdint.h unistd.h)
+   AC_CHECK_FUNCS(__secure_getenv gettimeofday)
+   AC_CHECK_DECLS([getenv])
+-  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
++  AC_REQUIRE([AC_TYPE_UINTMAX_T])
+ ])
+ 
+ AC_DEFUN([jm_PREREQ_XGETCWD],
+-- 
+1.9.0
+

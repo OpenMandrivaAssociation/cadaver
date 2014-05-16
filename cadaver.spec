@@ -8,6 +8,7 @@ URL:		http://www.webdav.org/cadaver/
 Source0:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz
 Source1:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz.asc
 Patch0:		cadaver-0.23.3-enable-build-with-neon-0.30.patch
+Patch1:		cadaver-0.23.3-update-and-fix-autofoo-mess.patch
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(neon)
 BuildRequires:	pkgconfig(libxml-2.0)
@@ -25,10 +26,10 @@ creation and deletion, and locking operations.
 %prep
 %setup -q
 %patch0 -p1 -b .neon0.30~
-./autogen.sh
+%patch1 -p1 -b .autofoo~
+autoreconf -fsv
 
 %build
-
 %configure	--with-neon=%{_prefix} \
 		--with-ssl \
     		--with-libxml2 \
