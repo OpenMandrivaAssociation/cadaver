@@ -31,7 +31,7 @@ creation and deletion, and locking operations.
 %patch0 -p1 -b .neon0.30~
 %patch1 -p1 -b .autofoo~
 %patch2 -p0 -b .strncat~
-autoreconf -fsv
+autoreconf -fiv
 
 %build
 %configure	--with-neon=%{_prefix} \
