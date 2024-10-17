@@ -4,7 +4,7 @@ Version:	0.23.3
 Release:	4
 License:	GPLv2+
 Group:		Networking/File transfer
-URL:		http://www.webdav.org/cadaver/
+URL:		https://www.webdav.org/cadaver/
 Source0:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz
 Source1:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz.asc
 Patch0:		cadaver-0.23.3-enable-build-with-neon-0.30.patch
