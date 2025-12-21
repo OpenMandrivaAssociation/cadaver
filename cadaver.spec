@@ -10,6 +10,11 @@ Source1:	http://www.webdav.org/cadaver/%{name}-%{version}.tar.gz.asc
 Patch0:		cadaver-0.23.3-enable-build-with-neon-0.30.patch
 Patch1:		cadaver-0.23.3-update-and-fix-autofoo-mess.patch
 Patch2:		cadaver-0.23.2-strncat.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	gettext-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(neon)
